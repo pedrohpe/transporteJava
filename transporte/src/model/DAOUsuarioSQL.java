@@ -37,21 +37,76 @@ public class DAOUsuarioSQL implements DAOUsuario {
 	}
 
 	@Override
-	public int getCPF(String nome) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void remover(String nome) {
-		// TODO Auto-generated method stub
-
+	public void remover(int cpf) {
+		Usuario u = buscaPorCpf(cpf);
+		if (u != null){		
+			Connection connection = new ConnectionFactory().getConnection();
+			
+			try {
+				PreparedStatement stmt = connection.prepareStatement("delete from usuario where cpf=?");
+				stmt.setInt(1, cpf);
+				stmt.execute();
+				stmt.close();
+				connection.close();
+			} catch (SQLException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
 	}
 
 	@Override
 	public List<Usuario> retornaTodos() {
-		// TODO Auto-generated method stub
-		return null;
+		Connection connection = new ConnectionFactory().getConnection();
+		
+		List<Usuario> lista = new ArrayList<Usuario>();
+		try{
+			PreparedStatement stmt = connection.prepareStatement("select * from usuario");
+			ResultSet rs = stmt.executeQuery();
+			
+			while (rs.next()){
+				Usuario ret = new Usuario();
+				ret.setCpf(rs.getInt("cpf"));
+				ret.setDatanasc(rs.getString("datanasc"));
+				ret.setProfissao(rs.getString("profissao"));
+				ret.setEndereco(rs.getString("endereco"));
+				ret.setSexo(rs.getString("sexo"));
+				ret.setNome(rs.getString("nome"));
+				lista.add(ret);
+			}
+			rs.close();
+			stmt.close();
+			connection.close();
+			return lista;
+		} catch(SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public Usuario buscaPorCpf(int cpf) {
+		Connection connection = new ConnectionFactory().getConnection();
+		
+		try {
+			PreparedStatement stmt = connection.prepareStatement("select * from usuario where usuario.cpf=?");
+			stmt.setInt(1, cpf);
+			ResultSet rs = stmt.executeQuery();
+			Usuario ret = new Usuario();
+			while (rs.next()){
+				ret.setCpf(rs.getInt("cpf"));
+				ret.setDatanasc(rs.getString("datanasc"));
+				ret.setProfissao(rs.getString("profissao"));
+				ret.setEndereco(rs.getString("endereco"));
+				ret.setSexo(rs.getString("sexo"));
+				ret.setNome(rs.getString("nome"));
+			}
+			stmt.close();
+			connection.close();
+			return ret;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
 	}
 
 }

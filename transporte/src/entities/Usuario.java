@@ -8,6 +8,11 @@ public class Usuario {
 	private String sexo;
 	private String nome;
 	
+	
+	
+	public Usuario() {
+	}
+	
 	public Usuario(int cpf, String datanasc, String profissao, String endereco, String sexo, String nome) {
 		super();
 		this.cpf = cpf;
