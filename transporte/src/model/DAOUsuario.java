@@ -2,8 +2,10 @@ package model;
 
 import java.util.List;
 
+import entities.Usuario;
+
 public interface DAOUsuario {
-	public void add (Usuario usuario);
+	public boolean add (Usuario usuario);
 	
 	public int getCPF (String nome);
 	
